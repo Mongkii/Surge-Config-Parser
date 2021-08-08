@@ -1,0 +1,38 @@
+{
+  "name": "surge-config-parser",
+  "version": "1.0.0",
+  "description": "Parse Surge config to JSON.",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "watch": "npm run clean && tsc -w",
+    "build": "npm run clean && tsc",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mongkii/Surge-Config-Parser.git"
+  },
+  "keywords": [
+    "surge",
+    "parser",
+    "vpn",
+    "config"
+  ],
+  "author": "Mongkii",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mongkii/Surge-Config-Parser/issues"
+  },
+  "homepage": "https://github.com/Mongkii/Surge-Config-Parser#readme",
+  "devDependencies": {
+    "@types/node": "^16.4.13",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  },
+  "files": [
+    "dist"
+  ]
+}
