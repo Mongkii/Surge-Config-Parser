@@ -44,7 +44,14 @@ export type Proxy = {
   port: number;
 } & AllNullable<{ [K in ProxyStrKeys]: string } & { [K in ProxyBoolKeys]: boolean }>;
 
+export interface ProxyGroup {
+  name: string;
+  type: string;
+  proxies: Proxy['name'][];
+}
+
 export type ConfigJSON = AllNullable<{
   General: General;
   Proxy: Proxy[];
+  'Proxy Group': ProxyGroup[];
 }>;
