@@ -1,9 +1,10 @@
-import { atomParsers, LinesParser, KeySet, removeComment } from './common';
+import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKeys } from '../types';
+import { atomParsers, errMsg, LinesParser, removeComment } from './common';
 
-const parseGeneral: LinesParser<any> = (lines) => {
+const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
   const keyValues = removeComment(lines).map(atomParsers.equal);
 
-  const boolKeys: KeySet = new Set([
+  const boolKeys = new Set<GeneralBoolKeys>([
     'wifi-assist',
     'allow-wifi-access',
     'replica',
@@ -11,31 +12,57 @@ const parseGeneral: LinesParser<any> = (lines) => {
     'exclude-simple-hostnames',
     'ipv6',
   ]);
-  const numKeys: KeySet = new Set([
+  const numKeys = new Set<GeneralNumKeys>([
     'wifi-access-http-port',
     'wifi-access-socks5-port',
     'test-timeout',
   ]);
-  const arrKeys: KeySet = new Set([
+  const arrKeys = new Set<GeneralArrKeys>([
     'doh-server',
     'dns-server',
     'tun-excluded-routes',
     'skip-proxy',
   ]);
+  const strKeys = new Set<GeneralStrKeys>([
+    'loglevel',
+    'http-listen',
+    'socks5-listen',
+    'external-controller-access',
+    'tls-provider',
+    'proxy-test-url',
+    'geoip-maxmind-url',
+  ]);
 
-  const generalData = Object.fromEntries(
-    keyValues.map(([key, value]) => {
-      if (boolKeys.has(key)) {
-        return [key, atomParsers.boolean(value)];
-      }
-      if (numKeys.has(key)) {
-        return [key, atomParsers.number(value)];
-      }
-      if (arrKeys.has(key)) {
-        return [key, atomParsers.comma(value)];
-      }
-      return [key, value];
-    })
+  const UNSUPPORTED_VALUE = Symbol();
+
+  const getParsedValue = (key: string, value: string) => {
+    if (boolKeys.has(key as GeneralBoolKeys)) {
+      return atomParsers.boolean(value);
+    }
+    if (numKeys.has(key as GeneralNumKeys)) {
+      return atomParsers.number(value);
+    }
+    if (arrKeys.has(key as GeneralArrKeys)) {
+      return atomParsers.comma(value);
+    }
+    if (strKeys.has(key as GeneralStrKeys)) {
+      return value;
+    }
+    return UNSUPPORTED_VALUE;
+  };
+
+  const generalData: General = Object.fromEntries(
+    keyValues
+      .map(([key, value]) => {
+        const parsedValue = getParsedValue(key, value);
+
+        if (parsedValue === UNSUPPORTED_VALUE) {
+          writeToLog(errMsg('General', `Unsupported config: ${key}, value: ${value}`));
+          return null;
+        }
+        return [key, parsedValue];
+      })
+      .filter((keyValue): keyValue is [key: string, value: any] => Boolean(keyValue))
   );
 
   return generalData;

@@ -91,3 +91,16 @@ geoip-maxmind-url = https://cdn.jsdelivr.net/gh/Hackl0us/GeoIP2-CN@release/Count
     },
   });
 });
+
+test('log unsupported config', () => {
+  const config = `
+[General]
+random-e87279b4 = 4
+  `;
+
+  let log = ``;
+  const setLog = (text) => (log = text);
+  parser.parse(config, { log: setLog });
+
+  expect(log).toBe('[ERROR in General] Unsupported config: random-e87279b4, value: 4');
+});

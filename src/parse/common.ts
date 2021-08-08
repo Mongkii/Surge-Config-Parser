@@ -1,6 +1,8 @@
-export type LinesParser<T> = (lines: string[]) => T;
+import type { ConfigJSON, WriteToLog } from '../types';
 
-export type KeySet = Set<string>;
+export type LinesParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
+
+export const errMsg = (scope: keyof ConfigJSON, text: string) => `[ERROR in ${scope}] ${text}`;
 
 export const removeComment = (lines: string[]): string[] =>
   lines.filter(

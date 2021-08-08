@@ -1,4 +1,4 @@
-import type { ConfigJSON } from '../types';
+import type { ConfigJSON, WriteToLog } from '../types';
 
 import parseGeneral from './parse-general';
 import { LinesParser } from './common';
@@ -53,7 +53,7 @@ const linesParserByGroupName: { [groupName in GroupName]: LinesParser<any> } = {
   General: parseGeneral,
 };
 
-const parse = (config: string): ConfigJSON => {
+const parse = (config: string, writeToLog: WriteToLog): ConfigJSON => {
   const lineGroups = groupLines(config);
 
   const configJSON: ConfigJSON = {};
@@ -64,7 +64,7 @@ const parse = (config: string): ConfigJSON => {
     if (!linesParser) {
       return;
     }
-    configJSON[name] = linesParser(lines);
+    configJSON[name] = linesParser(lines, writeToLog);
   });
 
   return configJSON;
