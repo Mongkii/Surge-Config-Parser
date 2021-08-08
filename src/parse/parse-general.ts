@@ -2,8 +2,6 @@ import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKey
 import { atomParsers, errMsg, LinesParser, removeComment } from './common';
 
 const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
-  const keyValues = removeComment(lines).map(atomParsers.equal);
-
   const boolKeys = new Set<GeneralBoolKeys>([
     'wifi-assist',
     'allow-wifi-access',
@@ -50,6 +48,8 @@ const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
     }
     return UNSUPPORTED_VALUE;
   };
+
+  const keyValues = removeComment(lines).map(atomParsers.equal);
 
   const generalData: General = Object.fromEntries(
     keyValues
