@@ -11,7 +11,7 @@ Test Proxy = ss, 127.0.0.1, 8080, encrypt-method=rc4-md5, password=abc123, udp-r
       {
         name: 'Test Proxy',
         type: 'ss',
-        hostname: '127.0.0.1',
+        server: '127.0.0.1',
         port: 8080,
         'encrypt-method': 'rc4-md5',
         password: 'abc123',
@@ -32,7 +32,7 @@ Test Proxy = ss, 127.0.0.1, 8080, test-name, abc123, encrypt-method=rc4-md5, udp
       {
         name: 'Test Proxy',
         type: 'ss',
-        hostname: '127.0.0.1',
+        server: '127.0.0.1',
         port: 8080,
         username: 'test-name',
         password: 'abc123',

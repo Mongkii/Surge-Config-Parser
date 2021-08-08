@@ -28,13 +28,13 @@ const parseProxy: LinesParser<ProxyItem[]> = (lines, writeToLog) => {
   const nameDetails = removeComment(lines).map(atomParsers.assign);
 
   const proxys: ProxyItem[] = nameDetails.map(([name, details]) => {
-    const [type, hostname, port, mayUser, mayPassword, ...restDetailParts] =
+    const [type, server, port, mayUser, mayPassword, ...restDetailParts] =
       atomParsers.comma(details);
 
     const proxyItem: ProxyItem = {
       name,
       type: type || '',
-      hostname: hostname || '',
+      server: server || '',
       port: Number(port),
     };
 

@@ -40,7 +40,7 @@ export type ProxyItemBoolKeys = 'udp-relay';
 export type ProxyItem = {
   name: string;
   type: string;
-  hostname: string;
+  server: string;
   port: number;
 } & AllNullable<{ [K in ProxyItemStrKeys]: string } & { [K in ProxyItemBoolKeys]: boolean }>;
 
