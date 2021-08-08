@@ -2,7 +2,8 @@ import type { ConfigJSON, WriteToLog } from '../types';
 
 export type LinesParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
 
-export const errMsg = (scope: keyof ConfigJSON, text: string) => `[ERROR in ${scope}] ${text}`;
+export const errUnsupport = (scope: keyof ConfigJSON, key: string, value: string) =>
+  `[ERROR in ${scope}] Unsupported config: ${key}, value: ${value}`;
 
 export const removeComment = (lines: string[]): string[] =>
   lines.filter(

@@ -1,5 +1,5 @@
 import { ProxyItem, ProxyItemBoolKeys, ProxyItemStrKeys } from '../types';
-import { atomParsers, errMsg, LinesParser, removeComment, testIsAssign } from './common';
+import { atomParsers, errUnsupport, LinesParser, removeComment, testIsAssign } from './common';
 
 const parseProxy: LinesParser<ProxyItem[]> = (lines, writeToLog) => {
   const boolKeys = new Set<ProxyItemBoolKeys>(['udp-relay']);
@@ -56,7 +56,7 @@ const parseProxy: LinesParser<ProxyItem[]> = (lines, writeToLog) => {
       const parsedValue = getParsedValue(key, value);
 
       if (parsedValue === UNSUPPORTED_VALUE) {
-        writeToLog(errMsg('Proxy', `Unsupported config: ${key}, value: ${value}`));
+        writeToLog(errUnsupport('Proxy', key, value));
         return;
       }
       // @ts-ignore TS can't validate such situation,

@@ -1,5 +1,5 @@
 import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKeys } from '../types';
-import { atomParsers, errMsg, LinesParser, removeComment } from './common';
+import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
 
 const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
   const boolKeys = new Set<GeneralBoolKeys>([
@@ -57,7 +57,7 @@ const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
         const parsedValue = getParsedValue(key, value);
 
         if (parsedValue === UNSUPPORTED_VALUE) {
-          writeToLog(errMsg('General', `Unsupported config: ${key}, value: ${value}`));
+          writeToLog(errUnsupport('General', key, value));
           return null;
         }
         return [key, parsedValue];
