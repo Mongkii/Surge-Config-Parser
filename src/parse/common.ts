@@ -13,7 +13,7 @@ export const atomParsers = {
   boolean: (text: string): boolean => (text === 'true' ? true : false),
   number: (text: string): number => Number(text),
   comma: (text: string): string[] => text.split(',').map((piece) => piece.trim()),
-  equal: (text: string): [left: string, right: string] => {
+  assign: (text: string): [left: string, right: string] => {
     let rawLeft = '';
     let rawRight = '';
 
@@ -32,11 +32,11 @@ export const atomParsers = {
   },
 };
 
-export const testIsEqual = (text: string) => {
+export const testIsAssign = (text: string) => {
   const trimText = text.trim();
 
   const lastIndex = trimText.length - 1;
-  const equalSignIndex = Array.from(trimText).findIndex((letter) => letter === '=');
+  const assignSignIndex = Array.from(trimText).findIndex((letter) => letter === '=');
 
-  return equalSignIndex !== -1 && equalSignIndex !== lastIndex;
+  return assignSignIndex !== -1 && assignSignIndex !== lastIndex;
 };

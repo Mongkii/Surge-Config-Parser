@@ -49,7 +49,7 @@ const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
     return UNSUPPORTED_VALUE;
   };
 
-  const keyValues = removeComment(lines).map(atomParsers.equal);
+  const keyValues = removeComment(lines).map(atomParsers.assign);
 
   const generalData: General = Object.fromEntries(
     keyValues

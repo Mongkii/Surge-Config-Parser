@@ -1,5 +1,5 @@
 import { ProxyItem, ProxyItemBoolKeys, ProxyItemStrKeys } from '../types';
-import { atomParsers, errMsg, LinesParser, removeComment, testIsEqual } from './common';
+import { atomParsers, errMsg, LinesParser, removeComment, testIsAssign } from './common';
 
 const parseProxy: LinesParser<ProxyItem[]> = (lines, writeToLog) => {
   const boolKeys = new Set<ProxyItemBoolKeys>(['udp-relay']);
@@ -25,11 +25,12 @@ const parseProxy: LinesParser<ProxyItem[]> = (lines, writeToLog) => {
     return UNSUPPORTED_VALUE;
   };
 
-  const nameDetails = removeComment(lines).map(atomParsers.equal);
+  const nameDetails = removeComment(lines).map(atomParsers.assign);
 
   const proxys: ProxyItem[] = nameDetails.map(([name, details]) => {
     const [type, hostname, port, mayUser, mayPassword, ...restDetailParts] =
       atomParsers.comma(details);
+
     const proxyItem: ProxyItem = {
       name,
       type: type || '',
@@ -37,17 +38,20 @@ const parseProxy: LinesParser<ProxyItem[]> = (lines, writeToLog) => {
       port: Number(port),
     };
 
-    const formatMayEqual = (equalName: string, mayEqualPart: string | undefined) =>
-      mayEqualPart && !testIsEqual(mayEqualPart) ? `${equalName} = ${mayEqualPart}` : mayEqualPart;
+    /** format may-not-assign value (like `'user123'`) to assign form (like `'username = user123'`) */
+    const formatMayNotAssign = (assignName: string, mayNotAssignPart: string | undefined) =>
+      mayNotAssignPart && !testIsAssign(mayNotAssignPart)
+        ? `${assignName} = ${mayNotAssignPart}`
+        : mayNotAssignPart;
 
-    const equalDetailParts = [
-      formatMayEqual('username', mayUser),
-      formatMayEqual('password', mayPassword),
+    const assignDetailParts = [
+      formatMayNotAssign('username', mayUser),
+      formatMayNotAssign('password', mayPassword),
       ...restDetailParts,
     ].filter((valuePart): valuePart is string => typeof valuePart === 'string');
 
-    equalDetailParts.forEach((detailPart) => {
-      const [key, value] = atomParsers.equal(detailPart);
+    assignDetailParts.forEach((detailPart) => {
+      const [key, value] = atomParsers.assign(detailPart);
 
       const parsedValue = getParsedValue(key, value);
 
