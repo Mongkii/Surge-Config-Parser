@@ -34,6 +34,17 @@ export type General = AllNullable<
     { [K in GeneralStrKeys]: string }
 >;
 
+export type ProxyItemStrKeys = 'username' | 'password' | 'encrypt-method';
+export type ProxyItemBoolKeys = 'udp-relay';
+
+export type ProxyItem = {
+  name: string;
+  type: string;
+  hostname: string;
+  port: number;
+} & AllNullable<{ [K in ProxyItemStrKeys]: string } & { [K in ProxyItemBoolKeys]: boolean }>;
+
 export type ConfigJSON = AllNullable<{
   General: General;
+  Proxy: ProxyItem[];
 }>;

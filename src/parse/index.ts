@@ -1,6 +1,7 @@
 import type { ConfigJSON, WriteToLog } from '../types';
 
 import parseGeneral from './parse-general';
+import parseProxy from './parse-proxy';
 import { LinesParser } from './common';
 
 type GroupName = keyof ConfigJSON;
@@ -51,6 +52,7 @@ const groupLines = (config: string): LineGroup[] => {
 
 const linesParserByGroupName: { [groupName in GroupName]: LinesParser<any> } = {
   General: parseGeneral,
+  Proxy: parseProxy,
 };
 
 const parse = (config: string, writeToLog: WriteToLog): ConfigJSON => {

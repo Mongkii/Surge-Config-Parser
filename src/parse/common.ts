@@ -31,3 +31,12 @@ export const atomParsers = {
     return [rawLeft.trim(), rawRight.trim()];
   },
 };
+
+export const testIsEqual = (text: string) => {
+  const trimText = text.trim();
+
+  const lastIndex = trimText.length - 1;
+  const equalSignIndex = Array.from(trimText).findIndex((letter) => letter === '=');
+
+  return equalSignIndex !== -1 && equalSignIndex !== lastIndex;
+};
