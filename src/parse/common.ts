@@ -2,8 +2,10 @@ import type { ConfigJSON, WriteToLog } from '../types';
 
 export type LinesParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
 
+export const errMsg = (scope: keyof ConfigJSON, text: string) => `[ERROR in ${scope}] ${text}`;
+
 export const errUnsupport = (scope: keyof ConfigJSON, key: string, value: string) =>
-  `[ERROR in ${scope}] Unsupported config: ${key}, value: ${value}`;
+  errMsg(scope, `Unsupported config: ${key}, value: ${value}`);
 
 export const removeComment = (lines: string[]): string[] =>
   lines.filter(
@@ -14,6 +16,7 @@ export const atomParsers = {
   boolean: (text: string): boolean => (text === 'true' ? true : false),
   number: (text: string): number => Number(text),
   comma: (text: string): string[] => text.split(',').map((piece) => piece.trim()),
+  space: (text: string): string[] => text.split(/\s+/).filter(Boolean),
   assign: (text: string): [left: string, right: string] => {
     const signIndex = text.indexOf('=');
 

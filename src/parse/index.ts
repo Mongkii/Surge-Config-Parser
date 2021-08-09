@@ -4,6 +4,7 @@ import parseGeneral from './parse-general';
 import parseReplica from './parse-replica';
 import parseProxy from './parse-proxy';
 import parseProxyGroup from './parse-proxy-group';
+import parseUrlRewrite from './parse-url-rewrite';
 import { LinesParser } from './common';
 
 type GroupName = keyof ConfigJSON;
@@ -57,6 +58,7 @@ const linesParserByGroupName: { [groupName in GroupName]: LinesParser<any> } = {
   Replica: parseReplica,
   Proxy: parseProxy,
   'Proxy Group': parseProxyGroup,
+  'URL Rewrite': parseUrlRewrite,
 };
 
 const parse = (config: string, writeToLog: WriteToLog): ConfigJSON => {

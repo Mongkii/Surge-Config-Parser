@@ -57,9 +57,16 @@ export interface ProxyGroup {
   proxies: Proxy['name'][];
 }
 
+export interface UrlRewrite {
+  from: string;
+  to: string;
+  mode?: string;
+}
+
 export type ConfigJSON = AllNullable<{
   General: General;
   Replica: Replica;
   Proxy: Proxy[];
   'Proxy Group': ProxyGroup[];
+  'URL Rewrite': UrlRewrite[];
 }>;
