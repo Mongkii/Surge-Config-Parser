@@ -72,6 +72,7 @@ const parse = (config: string, writeToLog: WriteToLog): ConfigJSON => {
     const linesParser = linesParserByGroupName[name];
 
     if (!linesParser) {
+      writeToLog(`Unsupported Config Scope: ${name}`);
       return;
     }
     configJSON[name] = linesParser(lines, writeToLog);
