@@ -1,3 +1,4 @@
+import { fromEntries } from '../utils';
 import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKeys } from '../types';
 import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
 
@@ -51,7 +52,7 @@ const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const generalData: General = Object.fromEntries(
+  const generalData: General = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);

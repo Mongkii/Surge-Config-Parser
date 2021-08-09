@@ -1,3 +1,4 @@
+import { fromEntries } from '../utils';
 import { MITM, MITMStrKeys } from '../types';
 import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
 
@@ -27,7 +28,7 @@ const parseMITM: LinesParser<MITM> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const mitmData: MITM = Object.fromEntries(
+  const mitmData: MITM = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);

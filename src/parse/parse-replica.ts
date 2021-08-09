@@ -1,3 +1,4 @@
+import { fromEntries } from '../utils';
 import { Replica, ReplicaBoolKeys } from '../types';
 import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
 
@@ -32,7 +33,7 @@ const parseReplica: LinesParser<Replica> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const replicaData: Replica = Object.fromEntries(
+  const replicaData: Replica = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);
