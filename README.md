@@ -7,5 +7,7 @@ Parse Surge config to JSON (works on iOS)
 - [ ] Online demo
 - [ ] Support more config items
 - [ ] Add more test cases
+- [ ] Support keep comment
+- [ ] Support keep line order
 
 Issues and PRs are welcome!
