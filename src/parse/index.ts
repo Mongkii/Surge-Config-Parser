@@ -41,7 +41,7 @@ const groupLines = (config: string): LineGroup[] => {
       return;
     }
 
-    if (!curGroup) {
+    if (!curGroup || !line) {
       return;
     }
     curGroup.lines.push(line);
