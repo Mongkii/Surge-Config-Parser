@@ -63,10 +63,14 @@ export interface UrlRewrite {
   mode?: string;
 }
 
+export type MITMStrKeys = 'ca-passphrase' | 'ca-p12';
+export type MITM = AllNullable<{ [K in MITMStrKeys]: string }>;
+
 export type ConfigJSON = AllNullable<{
   General: General;
   Replica: Replica;
   Proxy: Proxy[];
   'Proxy Group': ProxyGroup[];
   'URL Rewrite': UrlRewrite[];
+  MITM: MITM;
 }>;
