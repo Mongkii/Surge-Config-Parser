@@ -4,6 +4,7 @@ import parseGeneral from './parse-general';
 import parseReplica from './parse-replica';
 import parseProxy from './parse-proxy';
 import parseProxyGroup from './parse-proxy-group';
+import parseRule from './parse-rule';
 import parseUrlRewrite from './parse-url-rewrite';
 import parseMITM from './parse-mitm';
 import { LinesParser } from './common';
@@ -59,6 +60,7 @@ const linesParserByGroupName: { [groupName in GroupName]: LinesParser<any> } = {
   Replica: parseReplica,
   Proxy: parseProxy,
   'Proxy Group': parseProxyGroup,
+  Rule: parseRule,
   'URL Rewrite': parseUrlRewrite,
   MITM: parseMITM,
 };

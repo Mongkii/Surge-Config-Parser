@@ -57,6 +57,19 @@ export interface ProxyGroup {
   proxies: Proxy['name'][];
 }
 
+export interface NonFinalRule {
+  __isFinal?: false;
+  type: string;
+  value: string;
+  policy: string;
+}
+export interface FinalRule {
+  __isFinal?: true;
+  type: 'FINAL';
+  policy: string;
+}
+export type Rule = NonFinalRule | FinalRule;
+
 export interface UrlRewrite {
   from: string;
   to: string;
@@ -71,6 +84,7 @@ export type ConfigJSON = AllNullable<{
   Replica: Replica;
   Proxy: Proxy[];
   'Proxy Group': ProxyGroup[];
+  Rule: Rule[];
   'URL Rewrite': UrlRewrite[];
   MITM: MITM;
 }>;
