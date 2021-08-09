@@ -34,6 +34,13 @@ export type General = AllNullable<
     { [K in GeneralStrKeys]: string }
 >;
 
+export type ReplicaBoolKeys =
+  | 'hide-apple-request'
+  | 'hide-crashlytics-request'
+  | 'use-keyword-filter'
+  | 'hide-udp';
+export type Replica = AllNullable<{ [K in ReplicaBoolKeys]: boolean }>;
+
 export type ProxyStrKeys = 'username' | 'password' | 'encrypt-method';
 export type ProxyBoolKeys = 'udp-relay';
 
@@ -52,6 +59,7 @@ export interface ProxyGroup {
 
 export type ConfigJSON = AllNullable<{
   General: General;
+  Replica: Replica;
   Proxy: Proxy[];
   'Proxy Group': ProxyGroup[];
 }>;
