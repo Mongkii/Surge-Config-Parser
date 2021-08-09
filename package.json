@@ -1,8 +1,11 @@
 {
   "name": "surge-config-parser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Parse Surge config to JSON.",
   "main": "dist/index.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "watch": "npm run clean && tsc -w",
