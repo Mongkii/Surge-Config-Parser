@@ -1,6 +1,6 @@
 {
   "name": "surge-config-parser",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Parse Surge config to JSON.",
   "main": "dist/index.js",
   "publishConfig": {
