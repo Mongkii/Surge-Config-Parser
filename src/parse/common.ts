@@ -15,21 +15,11 @@ export const atomParsers = {
   number: (text: string): number => Number(text),
   comma: (text: string): string[] => text.split(',').map((piece) => piece.trim()),
   assign: (text: string): [left: string, right: string] => {
-    let rawLeft = '';
-    let rawRight = '';
+    const signIndex = text.indexOf('=');
 
-    const textLen = text.length;
-    for (let i = 0; i < textLen; i += 1) {
-      const curLetter = text[i];
-      if (curLetter !== '=') {
-        rawLeft += curLetter;
-        continue;
-      }
-      rawRight = text.slice(i + 1);
-      break;
-    }
-
-    return [rawLeft.trim(), rawRight.trim()];
+    return signIndex === -1
+      ? ['', '']
+      : [text.slice(0, signIndex).trim(), text.slice(signIndex + 1).trim()];
   },
 };
 
@@ -37,7 +27,7 @@ export const testIsAssign = (text: string) => {
   const trimText = text.trim();
 
   const lastIndex = trimText.length - 1;
-  const assignSignIndex = Array.from(trimText).findIndex((letter) => letter === '=');
+  const signIndex = trimText.indexOf('=');
 
-  return assignSignIndex !== -1 && assignSignIndex !== lastIndex;
+  return signIndex !== -1 && signIndex !== lastIndex;
 };
