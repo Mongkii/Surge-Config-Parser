@@ -98,9 +98,12 @@ test('log unsupported config', () => {
 random-e87279b4 = 4
   `;
 
-  let log = ``;
-  const setLog = (text) => (log = text);
-  parser.parse(config, { log: setLog });
+  let errMsg = ``;
+  parser.parse(config, {
+    log: (log) => {
+      errMsg = log;
+    },
+  });
 
-  expect(log).toBe('[ERROR in General] Unsupported config: random-e87279b4, value: 4');
+  expect(errMsg).toBe('[ERROR in General] Unsupported config: random-e87279b4, value: 4');
 });
