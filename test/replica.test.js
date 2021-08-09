@@ -25,9 +25,8 @@ test('log unsupported config', () => {
 random-eb956487 = 1
   `;
 
-  let log = ``;
-  const setLog = (text) => (log = text);
-  parser.parse(config, { log: setLog });
-
-  expect(log).toBe('[ERROR in Replica] Unsupported config: random-eb956487, value: 1');
+  parser.parse(config, {
+    log: (log) =>
+      expect(log).toBe('[ERROR in Replica] Unsupported config: random-eb956487, value: 1'),
+  });
 });

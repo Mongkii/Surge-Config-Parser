@@ -28,11 +28,10 @@ test('warn on unsupported url rewrite rule', () => {
 ^http://www\.google\.cn   
 `;
 
-  let errMsg = '';
   parser.parse(config, {
-    log: (log) => {
-      errMsg = log;
-    },
+    log: (log) =>
+      expect(log).toBe(
+        '[ERROR in URL Rewrite] Unsupported rule: "^http://www.google.cn undefined"'
+      ),
   });
-  expect(errMsg).toBe('[ERROR in URL Rewrite] Unsupported rule: "^http://www\.google\.cn undefined"');
 });
