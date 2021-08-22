@@ -1,22 +1,17 @@
 import { fromEntries } from '../utils';
-import { Replica, ReplicaBoolKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
+import { MITM, MITMStrKeys } from '../types';
+import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
 
-const parseReplica: LinesParser<Replica> = (lines, writeToLog) => {
-  const boolKeys = new Set<ReplicaBoolKeys>([
-    'hide-apple-request',
-    'hide-crashlytics-request',
-    'hide-udp',
-    'use-keyword-filter',
-  ]);
+export const parse: LinesParser<MITM> = (lines, writeToLog) => {
+  const boolKeys = new Set([]);
   const numKeys = new Set([]);
   const arrKeys = new Set([]);
-  const strKeys = new Set([]);
+  const strKeys = new Set<MITMStrKeys>(['ca-p12', 'ca-passphrase']);
 
   const UNSUPPORTED_VALUE = Symbol();
 
   const getParsedValue = (key: string, value: string) => {
-    if (boolKeys.has(key as ReplicaBoolKeys)) {
+    if (boolKeys.has(key as never)) {
       return atomParsers.boolean(value);
     }
     if (numKeys.has(key as never)) {
@@ -25,7 +20,7 @@ const parseReplica: LinesParser<Replica> = (lines, writeToLog) => {
     if (arrKeys.has(key as never)) {
       return atomParsers.comma(value);
     }
-    if (strKeys.has(key as never)) {
+    if (strKeys.has(key as MITMStrKeys)) {
       return value;
     }
     return UNSUPPORTED_VALUE;
@@ -33,13 +28,13 @@ const parseReplica: LinesParser<Replica> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const replicaData: Replica = fromEntries(
+  const mitmData: MITM = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);
 
         if (parsedValue === UNSUPPORTED_VALUE) {
-          writeToLog(errUnsupport('Replica', key, value));
+          writeToLog(errUnsupport('MITM', key, value));
           return null;
         }
         return [key, parsedValue];
@@ -47,7 +42,6 @@ const parseReplica: LinesParser<Replica> = (lines, writeToLog) => {
       .filter((keyValue): keyValue is [key: string, value: any] => Boolean(keyValue))
   );
 
-  return replicaData;
+  return mitmData;
 };
 
-export default parseReplica;

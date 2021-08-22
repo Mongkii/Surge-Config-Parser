@@ -1,7 +1,7 @@
 import { Proxy, ProxyBoolKeys, ProxyStrKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment, testIsAssign } from './common';
+import { atomParsers, errUnsupport, LinesParser, removeComment, testIsAssign } from '../utils';
 
-const parseProxy: LinesParser<Proxy[]> = (lines, writeToLog) => {
+export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
   const boolKeys = new Set<ProxyBoolKeys>(['udp-relay']);
   const numKeys = new Set([]);
   const arrKeys = new Set([]);
@@ -68,5 +68,3 @@ const parseProxy: LinesParser<Proxy[]> = (lines, writeToLog) => {
 
   return proxys;
 };
-
-export default parseProxy;

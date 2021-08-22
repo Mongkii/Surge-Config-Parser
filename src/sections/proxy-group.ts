@@ -1,7 +1,7 @@
 import { ProxyGroup } from '../types';
-import { atomParsers, LinesParser, removeComment } from './common';
+import { atomParsers, LinesParser, removeComment } from '../utils';
 
-const parseProxyGroup: LinesParser<ProxyGroup[]> = (lines, writeToLog) => {
+export const parse: LinesParser<ProxyGroup[]> = (lines, writeToLog) => {
   // const boolKeys = new Set([]);
   // const numKeys = new Set([]);
   // const arrKeys = new Set([]);
@@ -41,5 +41,3 @@ const parseProxyGroup: LinesParser<ProxyGroup[]> = (lines, writeToLog) => {
 
   return proxyGroups;
 };
-
-export default parseProxyGroup;

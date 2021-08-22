@@ -1,13 +1,13 @@
-import type { ConfigJSON, WriteToLog } from '../types';
+import type { ConfigJSON, WriteToLog } from './types';
+import type { LinesParser } from './utils';
 
-import parseGeneral from './parse-general';
-import parseReplica from './parse-replica';
-import parseProxy from './parse-proxy';
-import parseProxyGroup from './parse-proxy-group';
-import parseRule from './parse-rule';
-import parseUrlRewrite from './parse-url-rewrite';
-import parseMITM from './parse-mitm';
-import { LinesParser } from './common';
+import { parse as parseGeneral } from './sections/general';
+import { parse as parseReplica } from './sections/replica';
+import { parse as parseProxy } from './sections/proxy';
+import { parse as parseProxyGroup } from './sections/proxy-group';
+import { parse as parseRule } from './sections/rule';
+import { parse as parseUrlRewrite } from './sections/url-rewrite';
+import { parse as parseMITM } from './sections/mitm';
 
 type GroupName = keyof ConfigJSON;
 

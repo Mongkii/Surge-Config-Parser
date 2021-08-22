@@ -1,8 +1,8 @@
 import { fromEntries } from '../utils';
 import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
+import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
 
-const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
+export const parse: LinesParser<General> = (lines, writeToLog) => {
   const boolKeys = new Set<GeneralBoolKeys>([
     'wifi-assist',
     'allow-wifi-access',
@@ -68,5 +68,3 @@ const parseGeneral: LinesParser<General> = (lines, writeToLog) => {
 
   return generalData;
 };
-
-export default parseGeneral;

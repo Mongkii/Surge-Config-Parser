@@ -1,7 +1,7 @@
 import { UrlRewrite } from '../types';
-import { atomParsers, errMsg, LinesParser, removeComment } from './common';
+import { atomParsers, errMsg, LinesParser, removeComment } from '../utils';
 
-const parseUrlRewrite: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
+export const parse: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
   const rawRewriteDatas = removeComment(lines).map(atomParsers.space);
 
   const urlRewrites: UrlRewrite[] = rawRewriteDatas
@@ -20,5 +20,3 @@ const parseUrlRewrite: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
 
   return urlRewrites;
 };
-
-export default parseUrlRewrite;

@@ -1,5 +1,5 @@
 import { Rule, FinalRule, NonFinalRule } from '../types';
-import { errMsg, LinesParser, removeComment } from './common';
+import { errMsg, LinesParser, removeComment } from '../utils';
 
 // Rule supports complex like "AND,((SRC-IP,192.168.1.110), (DOMAIN, example.com)),DIRECT".
 // It should be split to "AND", "((SRC-IP,192.168.1.110), (DOMAIN, example.com))", "DIRECT"
@@ -32,7 +32,7 @@ const ruleCommaParser = (text: string): string[] => {
   return pieces.map((piece) => piece.trim());
 };
 
-const parseRule: LinesParser<Rule[]> = (lines, writeToLog) => {
+export const parse: LinesParser<Rule[]> = (lines, writeToLog) => {
   const ruleDatas = removeComment(lines).map(ruleCommaParser);
 
   const rules: Rule[] = ruleDatas
@@ -58,5 +58,3 @@ const parseRule: LinesParser<Rule[]> = (lines, writeToLog) => {
 
   return rules;
 };
-
-export default parseRule;

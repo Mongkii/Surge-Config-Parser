@@ -1,17 +1,22 @@
 import { fromEntries } from '../utils';
-import { MITM, MITMStrKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment } from './common';
+import { Replica, ReplicaBoolKeys } from '../types';
+import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
 
-const parseMITM: LinesParser<MITM> = (lines, writeToLog) => {
-  const boolKeys = new Set([]);
+export const parse: LinesParser<Replica> = (lines, writeToLog) => {
+  const boolKeys = new Set<ReplicaBoolKeys>([
+    'hide-apple-request',
+    'hide-crashlytics-request',
+    'hide-udp',
+    'use-keyword-filter',
+  ]);
   const numKeys = new Set([]);
   const arrKeys = new Set([]);
-  const strKeys = new Set<MITMStrKeys>(['ca-p12', 'ca-passphrase']);
+  const strKeys = new Set([]);
 
   const UNSUPPORTED_VALUE = Symbol();
 
   const getParsedValue = (key: string, value: string) => {
-    if (boolKeys.has(key as never)) {
+    if (boolKeys.has(key as ReplicaBoolKeys)) {
       return atomParsers.boolean(value);
     }
     if (numKeys.has(key as never)) {
@@ -20,7 +25,7 @@ const parseMITM: LinesParser<MITM> = (lines, writeToLog) => {
     if (arrKeys.has(key as never)) {
       return atomParsers.comma(value);
     }
-    if (strKeys.has(key as MITMStrKeys)) {
+    if (strKeys.has(key as never)) {
       return value;
     }
     return UNSUPPORTED_VALUE;
@@ -28,13 +33,13 @@ const parseMITM: LinesParser<MITM> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const mitmData: MITM = fromEntries(
+  const replicaData: Replica = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);
 
         if (parsedValue === UNSUPPORTED_VALUE) {
-          writeToLog(errUnsupport('MITM', key, value));
+          writeToLog(errUnsupport('Replica', key, value));
           return null;
         }
         return [key, parsedValue];
@@ -42,7 +47,5 @@ const parseMITM: LinesParser<MITM> = (lines, writeToLog) => {
       .filter((keyValue): keyValue is [key: string, value: any] => Boolean(keyValue))
   );
 
-  return mitmData;
+  return replicaData;
 };
-
-export default parseMITM;
