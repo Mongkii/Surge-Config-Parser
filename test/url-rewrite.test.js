@@ -35,3 +35,27 @@ test('warn on unsupported url rewrite rule', () => {
       ),
   });
 });
+
+test('generate url rewrite correctly', () => {
+  const json = {
+    'URL Rewrite': [
+      {
+        from: '^http://www.google.cn',
+        to: 'http://www.google.com',
+      },
+      {
+        from: '^http://ad.com/ad.png',
+        to: '_',
+        mode: 'reject',
+      },
+    ],
+  };
+
+  const result = `
+[URL Rewrite]
+^http://www\.google\.cn http://www.google.com
+^http://ad\.com/ad\.png _ reject
+`.trim();
+
+  expect(parser.generate(json)).toBe(result);
+});

@@ -1,10 +1,17 @@
 import { UrlRewrite } from '../types';
-import { atomParsers, errMsg, LinesParser, removeComment } from '../utils';
+import {
+  atomGenerators,
+  atomParsers,
+  errMsg,
+  LinesGenerator,
+  LinesParser,
+  removeComment,
+} from '../utils';
 
 export const parse: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
   const rawRewriteDatas = removeComment(lines).map(atomParsers.space);
 
-  const urlRewrites: UrlRewrite[] = rawRewriteDatas
+  const parsed: UrlRewrite[] = rawRewriteDatas
     .map(([from, to, mode]) => {
       if (!(from && to)) {
         writeToLog(errMsg('URL Rewrite', `Unsupported rule: "${from} ${to}"`));
@@ -18,5 +25,10 @@ export const parse: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
     })
     .filter((urlRewrite): urlRewrite is UrlRewrite => Boolean(urlRewrite));
 
-  return urlRewrites;
+  return parsed;
 };
+
+export const generate: LinesGenerator<UrlRewrite[]> = (data, writeToLog) =>
+  data
+    .filter(({ from, to }) => Boolean(from && to))
+    .map(({ from, to, mode }) => atomGenerators.space([from, to, mode]));

@@ -1,5 +1,7 @@
 import type { ConfigJSON, WriteToLog } from './types';
 
+export const isNonNil = <T>(input: T): input is NonNullable<T> => input != null;
+
 export const fromEntries = <T = any>(entries: [string, T][]): { [k: string]: T } => {
   const result: { [k: string]: T } = {};
 
@@ -11,6 +13,8 @@ export const fromEntries = <T = any>(entries: [string, T][]): { [k: string]: T }
 };
 
 export type LinesParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
+
+export type LinesGenerator<T> = (date: T, writeToLog: WriteToLog) => string[];
 
 export const errMsg = (scope: keyof ConfigJSON, text: string) => `[ERROR in ${scope}] ${text}`;
 
@@ -33,6 +37,26 @@ export const atomParsers = {
     return signIndex === -1
       ? ['', '']
       : [text.slice(0, signIndex).trim(), text.slice(signIndex + 1).trim()];
+  },
+};
+
+const commaGenerator = (items: any[]): string => items.filter(isNonNil).join(', ');
+
+export const atomGenerators = {
+  comma: commaGenerator,
+  space: (items: any[]): string => items.filter(isNonNil).join(' '),
+  /**
+   * generate 'key = value' from keyValue pair. You should specify how to deal with array value.
+   * @param keyValue
+   * @param formatArr How to generate string from array value. If not specified, `atomGenerators.comma` will be used.
+   * @returns
+   */
+  assign: (
+    [left, right]: [left: string, right: any],
+    formatArr: (items: any[]) => string = commaGenerator
+  ): string => {
+    const strRight = Array.isArray(right) ? formatArr(right) : String(right);
+    return `${left} = ${strRight}`;
   },
 };
 

@@ -1,5 +1,13 @@
 import { Proxy, ProxyBoolKeys, ProxyStrKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment, testIsAssign } from '../utils';
+import {
+  atomGenerators,
+  atomParsers,
+  errUnsupport,
+  LinesGenerator,
+  LinesParser,
+  removeComment,
+  testIsAssign,
+} from '../utils';
 
 export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
   const boolKeys = new Set<ProxyBoolKeys>(['udp-relay']);
@@ -27,7 +35,7 @@ export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
 
   const nameDetails = removeComment(lines).map(atomParsers.assign);
 
-  const proxys: Proxy[] = nameDetails.map(([name, details]) => {
+  const parsed: Proxy[] = nameDetails.map(([name, details]) => {
     const [type, server, port, mayUser, mayPassword, ...restDetailParts] =
       atomParsers.comma(details);
 
@@ -44,13 +52,14 @@ export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
         ? `${assignName} = ${mayNotAssignPart}`
         : mayNotAssignPart;
 
-    const assignDetailParts = [
+    /** proxy detailed parts, all in 'assign format' (key = value). */
+    const detailParts = [
       formatMayNotAssign('username', mayUser),
       formatMayNotAssign('password', mayPassword),
       ...restDetailParts,
     ].filter((valuePart): valuePart is string => typeof valuePart === 'string');
 
-    assignDetailParts.forEach((detailPart) => {
+    detailParts.forEach((detailPart) => {
       const [key, value] = atomParsers.assign(detailPart);
 
       const parsedValue = getParsedValue(key, value);
@@ -66,5 +75,16 @@ export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
     return proxy;
   });
 
-  return proxys;
+  return parsed;
 };
+
+export const generate: LinesGenerator<Proxy[]> = (data, writeToLog) =>
+  data
+    .filter((proxy) => Boolean(proxy.name /* && proxy.type // allow empty type for now. */))
+    .map((proxy) => {
+      const { name, type, server, port, ...detailParts } = proxy;
+      const detailPartsInAssignForm = Object.entries(detailParts).map((keyValue) =>
+        atomGenerators.assign(keyValue, atomGenerators.comma)
+      );
+      return atomGenerators.assign([name, [type, server, port, ...detailPartsInAssignForm]]);
+    });

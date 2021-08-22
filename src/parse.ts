@@ -1,4 +1,4 @@
-import type { ConfigJSON, WriteToLog } from './types';
+import type { ConfigJSON, GroupName, WriteToLog } from './types';
 import type { LinesParser } from './utils';
 
 import { parse as parseGeneral } from './sections/general';
@@ -8,8 +8,6 @@ import { parse as parseProxyGroup } from './sections/proxy-group';
 import { parse as parseRule } from './sections/rule';
 import { parse as parseUrlRewrite } from './sections/url-rewrite';
 import { parse as parseMITM } from './sections/mitm';
-
-type GroupName = keyof ConfigJSON;
 
 interface LineGroup {
   name: GroupName;

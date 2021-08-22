@@ -78,3 +78,56 @@ random-bdaaf25a = 3
       ),
   });
 });
+
+test('generate combined config correctly', () => {
+  const json = {
+    General: {
+      loglevel: 'notify',
+      'dns-server': ['system'],
+    },
+    Proxy: [
+      {
+        name: 'Test Proxy',
+        type: 'ss',
+        server: '127.0.0.1',
+        port: 8080,
+        'encrypt-method': 'rc4-md5',
+        password: 'abc123',
+        'udp-relay': true,
+      },
+    ],
+    'Proxy Group': [
+      {
+        name: 'Test Group',
+        type: 'select',
+        proxies: ['1 2 3', 'ab c', '3)_#*)@$()'],
+      },
+    ],
+    Rule: [{ type: 'DOMAIN', value: 'test.com', policy: 'DIRECT' }],
+    MITM: {
+      'ca-passphrase': '1234ABCD',
+      'ca-p12': 'MIIKPAIBAz/=',
+    },
+  };
+
+  const result = `
+[General]
+loglevel = notify
+dns-server = system
+
+[Proxy]
+Test Proxy = ss, 127.0.0.1, 8080, encrypt-method = rc4-md5, password = abc123, udp-relay = true
+
+[Proxy Group]
+Test Group = select, 1 2 3, ab c, 3)_#*)@$()
+
+[Rule]
+DOMAIN, test.com, DIRECT
+
+[MITM]
+ca-passphrase = 1234ABCD
+ca-p12 = MIIKPAIBAz/=
+`.trim();
+
+  expect(parser.generate(json)).toBe(result);
+});

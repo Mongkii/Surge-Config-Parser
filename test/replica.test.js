@@ -30,3 +30,24 @@ random-eb956487 = 1
       expect(log).toBe('[ERROR in Replica] Unsupported config: random-eb956487, value: 1'),
   });
 });
+
+test('generate replica correctly', () => {
+  const json = {
+    Replica: {
+      'hide-apple-request': true,
+      'hide-crashlytics-request': true,
+      'use-keyword-filter': false,
+      'hide-udp': false,
+    },
+  };
+
+  const result = `
+[Replica]
+hide-apple-request = true
+hide-crashlytics-request = true
+use-keyword-filter = false
+hide-udp = false
+`.trim();
+
+  expect(parser.generate(json)).toBe(result);
+});

@@ -1,4 +1,4 @@
-import { fromEntries } from '../utils';
+import { atomGenerators, fromEntries, isNonNil, LinesGenerator } from '../utils';
 import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKeys } from '../types';
 import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
 
@@ -52,7 +52,7 @@ export const parse: LinesParser<General> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const generalData: General = fromEntries(
+  const parsed: General = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);
@@ -66,5 +66,10 @@ export const parse: LinesParser<General> = (lines, writeToLog) => {
       .filter((keyValue): keyValue is [key: string, value: any] => Boolean(keyValue))
   );
 
-  return generalData;
+  return parsed;
 };
+
+export const generate: LinesGenerator<General> = (data, writeToLog) =>
+  Object.entries(data)
+    .filter(([key, value]) => isNonNil(value))
+    .map((keyValue) => atomGenerators.assign(keyValue));

@@ -1,4 +1,4 @@
-import type { ConfigJSON, WriteToLog, ParseOptions } from './types';
+import type { ConfigJSON, WriteToLog, ParseOptions, GenerateOptions } from './types';
 
 import parse from './parse';
 import generate from './generate';
@@ -24,9 +24,20 @@ const surgeConfigParser = {
   /**
    * generate Surge config from JSON
    * @param json parsed JSON
+   * @param generateOptions Generate Options
    * @returns Surge Config
    */
-  generate: (json: ConfigJSON): string => generate(json),
+  generate: (json: ConfigJSON, generateOptions: GenerateOptions = {}): string => {
+    const logLines: string[] = [];
+    const writeToLog: WriteToLog = (msg) => {
+      logLines.push(msg);
+    };
+
+    const config = generate(json, writeToLog);
+    generateOptions.log?.(logLines.join('\n'));
+
+    return config;
+  },
 };
 
 export default surgeConfigParser;

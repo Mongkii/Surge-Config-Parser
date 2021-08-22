@@ -25,3 +25,20 @@ random-1234f820 = 2
     log: (log) => expect(log).toBe('[ERROR in MITM] Unsupported config: random-1234f820, value: 2'),
   });
 });
+
+test('generate replica correctly', () => {
+  const json = {
+    MITM: {
+      'ca-passphrase': '1234ABCD',
+      'ca-p12': 'MIIKPAIBAz/=',
+    },
+  };
+
+  const result = `
+[MITM]
+ca-passphrase = 1234ABCD
+ca-p12 = MIIKPAIBAz/=
+`.trim();
+
+  expect(parser.generate(json)).toBe(result);
+});

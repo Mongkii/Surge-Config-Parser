@@ -5,6 +5,11 @@ export interface ParseOptions {
   log?: (log: string) => void;
 }
 
+export interface GenerateOptions {
+  /** Pass a function so it can deal with log outputs. */
+  log?: (log: string) => void;
+}
+
 type AllNullable<T> = T extends Record<any, any>
   ? { [K in keyof T]?: AllNullable<T[K]> }
   : T | undefined;
@@ -66,6 +71,7 @@ export interface NonFinalRule {
 export interface FinalRule {
   __isFinal?: true;
   type: 'FINAL';
+  value: null;
   policy: string;
 }
 export type Rule = NonFinalRule | FinalRule;
@@ -88,3 +94,5 @@ export type ConfigJSON = AllNullable<{
   'URL Rewrite': UrlRewrite[];
   MITM: MITM;
 }>;
+
+export type GroupName = keyof ConfigJSON;

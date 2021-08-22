@@ -1,5 +1,5 @@
 import { Rule, FinalRule, NonFinalRule } from '../types';
-import { errMsg, LinesParser, removeComment } from '../utils';
+import { atomGenerators, errMsg, LinesGenerator, LinesParser, removeComment } from '../utils';
 
 // Rule supports complex like "AND,((SRC-IP,192.168.1.110), (DOMAIN, example.com)),DIRECT".
 // It should be split to "AND", "((SRC-IP,192.168.1.110), (DOMAIN, example.com))", "DIRECT"
@@ -35,7 +35,7 @@ const ruleCommaParser = (text: string): string[] => {
 export const parse: LinesParser<Rule[]> = (lines, writeToLog) => {
   const ruleDatas = removeComment(lines).map(ruleCommaParser);
 
-  const rules: Rule[] = ruleDatas
+  const parsed: Rule[] = ruleDatas
     .map(([type, ...restData]) => {
       if (!type) {
         writeToLog(errMsg('Rule', `Unsupported rule: "${[type, ...restData].join(',')}"`));
@@ -43,7 +43,7 @@ export const parse: LinesParser<Rule[]> = (lines, writeToLog) => {
       }
       if (type === 'FINAL') {
         const [policy] = restData;
-        const finalRule: FinalRule = { __isFinal: true, type, policy: policy || '' };
+        const finalRule: FinalRule = { __isFinal: true, type, value: null, policy: policy || '' };
         return finalRule;
       }
       const [value, policy] = restData;
@@ -56,5 +56,10 @@ export const parse: LinesParser<Rule[]> = (lines, writeToLog) => {
     })
     .filter((rule): rule is Rule => Boolean(rule));
 
-  return rules;
+  return parsed;
 };
+
+export const generate: LinesGenerator<Rule[]> = (data, writeToLog) =>
+  data
+    .filter((rule) => Boolean(rule.type))
+    .map((rule) => atomGenerators.comma([rule.type, rule.value, rule.policy]));

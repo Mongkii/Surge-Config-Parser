@@ -1,4 +1,4 @@
-import { fromEntries } from '../utils';
+import { atomGenerators, fromEntries, isNonNil, LinesGenerator } from '../utils';
 import { Replica, ReplicaBoolKeys } from '../types';
 import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
 
@@ -33,7 +33,7 @@ export const parse: LinesParser<Replica> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const replicaData: Replica = fromEntries(
+  const parsed: Replica = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);
@@ -47,5 +47,10 @@ export const parse: LinesParser<Replica> = (lines, writeToLog) => {
       .filter((keyValue): keyValue is [key: string, value: any] => Boolean(keyValue))
   );
 
-  return replicaData;
+  return parsed;
 };
+
+export const generate: LinesGenerator<Replica> = (data, writeToLog) =>
+  Object.entries(data)
+    .filter(([key, value]) => isNonNil(value))
+    .map((keyValue) => atomGenerators.assign(keyValue));
