@@ -46,8 +46,14 @@ export type ReplicaBoolKeys =
   | 'hide-udp';
 export type Replica = AllNullable<{ [K in ReplicaBoolKeys]: boolean }>;
 
-export type ProxyStrKeys = 'username' | 'password' | 'encrypt-method';
-export type ProxyBoolKeys = 'udp-relay';
+export type ProxyStrKeys =
+  | 'username'
+  | 'password'
+  | 'encrypt-method'
+  | 'psk'
+  | 'obfs'
+  | 'obfs-host';
+export type ProxyBoolKeys = 'udp-relay' | 'tfo';
 
 export type Proxy = {
   name: string;

@@ -10,10 +10,17 @@ import {
 } from '../utils';
 
 export const parse: ScopeParser<Proxy[]> = (lines, writeToLog) => {
-  const boolKeys = new Set<ProxyBoolKeys>(['udp-relay']);
+  const boolKeys = new Set<ProxyBoolKeys>(['udp-relay', 'tfo']);
   const numKeys = new Set([]);
   const arrKeys = new Set([]);
-  const strKeys = new Set<ProxyStrKeys>(['username', 'password', 'encrypt-method']);
+  const strKeys = new Set<ProxyStrKeys>([
+    'username',
+    'password',
+    'encrypt-method',
+    'psk',
+    'obfs',
+    'obfs-host',
+  ]);
 
   const UNSUPPORTED_VALUE = Symbol();
 
