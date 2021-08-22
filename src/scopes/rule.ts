@@ -1,5 +1,5 @@
 import { Rule, FinalRule, NonFinalRule } from '../types';
-import { atomGenerators, errMsg, LinesGenerator, LinesParser, removeComment } from '../utils';
+import { atomGenerators, errMsg, ScopeGenerator, ScopeParser, removeComment } from '../utils';
 
 // Rule supports complex like "AND,((SRC-IP,192.168.1.110), (DOMAIN, example.com)),DIRECT".
 // It should be split to "AND", "((SRC-IP,192.168.1.110), (DOMAIN, example.com))", "DIRECT"
@@ -32,7 +32,7 @@ const ruleCommaParser = (text: string): string[] => {
   return pieces.map((piece) => piece.trim());
 };
 
-export const parse: LinesParser<Rule[]> = (lines, writeToLog) => {
+export const parse: ScopeParser<Rule[]> = (lines, writeToLog) => {
   const ruleDatas = removeComment(lines).map(ruleCommaParser);
 
   const parsed: Rule[] = ruleDatas
@@ -59,7 +59,7 @@ export const parse: LinesParser<Rule[]> = (lines, writeToLog) => {
   return parsed;
 };
 
-export const generate: LinesGenerator<Rule[]> = (data, writeToLog) =>
+export const generate: ScopeGenerator<Rule[]> = (data, writeToLog) =>
   data
     .filter((rule) => Boolean(rule.type))
     .map((rule) => atomGenerators.comma([rule.type, rule.value, rule.policy]));

@@ -1,8 +1,8 @@
-import { atomGenerators, fromEntries, isNonNil, LinesGenerator } from '../utils';
+import { atomGenerators, fromEntries, isNonNil, ScopeGenerator } from '../utils';
 import { General, GeneralArrKeys, GeneralBoolKeys, GeneralNumKeys, GeneralStrKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
+import { atomParsers, errUnsupport, ScopeParser, removeComment } from '../utils';
 
-export const parse: LinesParser<General> = (lines, writeToLog) => {
+export const parse: ScopeParser<General> = (lines, writeToLog) => {
   const boolKeys = new Set<GeneralBoolKeys>([
     'wifi-assist',
     'allow-wifi-access',
@@ -69,7 +69,7 @@ export const parse: LinesParser<General> = (lines, writeToLog) => {
   return parsed;
 };
 
-export const generate: LinesGenerator<General> = (data, writeToLog) =>
+export const generate: ScopeGenerator<General> = (data, writeToLog) =>
   Object.entries(data)
     .filter(([key, value]) => isNonNil(value))
     .map((keyValue) => atomGenerators.assign(keyValue));

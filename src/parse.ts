@@ -1,19 +1,19 @@
-import type { ConfigJSON, GroupName, WriteToLog } from './types';
-import type { LinesParser } from './utils';
+import type { ConfigJSON, ScopeName, WriteToLog } from './types';
+import type { ScopeParser } from './utils';
 
-import { parse as parseGeneral } from './sections/general';
-import { parse as parseReplica } from './sections/replica';
-import { parse as parseProxy } from './sections/proxy';
-import { parse as parseProxyGroup } from './sections/proxy-group';
-import { parse as parseRule } from './sections/rule';
-import { parse as parseUrlRewrite } from './sections/url-rewrite';
-import { parse as parseMITM } from './sections/mitm';
+import { parse as parseGeneral } from './scopes/general';
+import { parse as parseReplica } from './scopes/replica';
+import { parse as parseProxy } from './scopes/proxy';
+import { parse as parseProxyGroup } from './scopes/proxy-group';
+import { parse as parseRule } from './scopes/rule';
+import { parse as parseUrlRewrite } from './scopes/url-rewrite';
+import { parse as parseMITM } from './scopes/mitm';
 
 interface LineGroup {
-  name: GroupName;
+  name: ScopeName;
   lines: string[];
 }
-/** Group config text lines by [XXX] groupName */
+/** Group config text lines by [XXX] scopeName */
 const groupLines = (config: string): LineGroup[] => {
   const lines = config
     .trim()
@@ -28,14 +28,14 @@ const groupLines = (config: string): LineGroup[] => {
   let curGroup: LineGroup | null = null;
 
   lines.forEach((line) => {
-    const isGroupNameLine = line.startsWith('[') && line.endsWith(']');
+    const isScopeNameLine = line.startsWith('[') && line.endsWith(']');
 
-    if (isGroupNameLine) {
+    if (isScopeNameLine) {
       // Add previous 'currrent group' to result and replace it with a new one.
       if (curGroup) {
         result.push(curGroup);
       }
-      curGroup = { name: line.slice(1, -1) as GroupName, lines: [] };
+      curGroup = { name: line.slice(1, -1) as ScopeName, lines: [] };
       return;
     }
 
@@ -53,7 +53,7 @@ const groupLines = (config: string): LineGroup[] => {
   return result;
 };
 
-const linesParserByGroupName: { [groupName in GroupName]: LinesParser<any> } = {
+const parserByScope: { [scope in ScopeName]: ScopeParser<any> } = {
   General: parseGeneral,
   Replica: parseReplica,
   Proxy: parseProxy,
@@ -69,13 +69,13 @@ const parse = (config: string, writeToLog: WriteToLog): ConfigJSON => {
   const configJSON: ConfigJSON = {};
 
   lineGroups.forEach(({ name, lines }) => {
-    const linesParser = linesParserByGroupName[name];
+    const parser = parserByScope[name];
 
-    if (!linesParser) {
+    if (!parser) {
       writeToLog(`Unsupported Config Scope: ${name}`);
       return;
     }
-    configJSON[name] = linesParser(lines, writeToLog);
+    configJSON[name] = parser(lines, writeToLog);
   });
 
   return configJSON;

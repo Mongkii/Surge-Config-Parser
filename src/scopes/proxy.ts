@@ -3,13 +3,13 @@ import {
   atomGenerators,
   atomParsers,
   errUnsupport,
-  LinesGenerator,
-  LinesParser,
+  ScopeGenerator,
+  ScopeParser,
   removeComment,
   testIsAssign,
 } from '../utils';
 
-export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
+export const parse: ScopeParser<Proxy[]> = (lines, writeToLog) => {
   const boolKeys = new Set<ProxyBoolKeys>(['udp-relay']);
   const numKeys = new Set([]);
   const arrKeys = new Set([]);
@@ -78,7 +78,7 @@ export const parse: LinesParser<Proxy[]> = (lines, writeToLog) => {
   return parsed;
 };
 
-export const generate: LinesGenerator<Proxy[]> = (data, writeToLog) =>
+export const generate: ScopeGenerator<Proxy[]> = (data, writeToLog) =>
   data
     .filter((proxy) => Boolean(proxy.name /* && proxy.type // allow empty type for now. */))
     .map((proxy) => {

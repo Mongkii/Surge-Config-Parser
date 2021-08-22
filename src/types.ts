@@ -95,4 +95,4 @@ export type ConfigJSON = AllNullable<{
   MITM: MITM;
 }>;
 
-export type GroupName = keyof ConfigJSON;
+export type ScopeName = keyof ConfigJSON;

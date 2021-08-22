@@ -1,16 +1,16 @@
-import type { ConfigJSON, GroupName, WriteToLog } from './types';
+import type { ConfigJSON, ScopeName, WriteToLog } from './types';
 
-import type { LinesGenerator } from './utils';
+import type { ScopeGenerator } from './utils';
 
-import { generate as generateGeneral } from './sections/general';
-import { generate as generateReplica } from './sections/replica';
-import { generate as generateProxy } from './sections/proxy';
-import { generate as generateProxyGroup } from './sections/proxy-group';
-import { generate as generateRule } from './sections/rule';
-import { generate as generateUrlRewrite } from './sections/url-rewrite';
-import { generate as generateMITM } from './sections/mitm';
+import { generate as generateGeneral } from './scopes/general';
+import { generate as generateReplica } from './scopes/replica';
+import { generate as generateProxy } from './scopes/proxy';
+import { generate as generateProxyGroup } from './scopes/proxy-group';
+import { generate as generateRule } from './scopes/rule';
+import { generate as generateUrlRewrite } from './scopes/url-rewrite';
+import { generate as generateMITM } from './scopes/mitm';
 
-const generatorByGroupName: { [groupName in GroupName]: LinesGenerator<any> } = {
+const generatorByScope: { [scope in ScopeName]: ScopeGenerator<any> } = {
   General: generateGeneral,
   Replica: generateReplica,
   Proxy: generateProxy,
@@ -21,10 +21,15 @@ const generatorByGroupName: { [groupName in GroupName]: LinesGenerator<any> } = 
 };
 
 const generate = (json: ConfigJSON, writeToLog: WriteToLog): string => {
-  const groupConfigs = Object.entries(json).map(([groupName, data]) => {
-    const title = `[${groupName}]`;
+  const groupConfigs = Object.entries(json).map(([scope, data]) => {
+    const title = `[${scope}]`;
 
-    const generator = generatorByGroupName[groupName as GroupName];
+    const generator = generatorByScope[scope as ScopeName];
+    if (!generator) {
+      writeToLog(`Unsupported Config Scope: ${scope}`);
+      return;
+    }
+
     const lines = generator(data, writeToLog);
 
     return [title, ...lines].join('\n');

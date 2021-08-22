@@ -12,9 +12,9 @@ export const fromEntries = <T = any>(entries: [string, T][]): { [k: string]: T }
   return result;
 };
 
-export type LinesParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
+export type ScopeParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
 
-export type LinesGenerator<T> = (date: T, writeToLog: WriteToLog) => string[];
+export type ScopeGenerator<T> = (date: T, writeToLog: WriteToLog) => string[];
 
 export const errMsg = (scope: keyof ConfigJSON, text: string) => `[ERROR in ${scope}] ${text}`;
 

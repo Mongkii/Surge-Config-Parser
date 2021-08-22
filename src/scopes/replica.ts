@@ -1,17 +1,22 @@
-import { atomGenerators, fromEntries, isNonNil, LinesGenerator } from '../utils';
-import { MITM, MITMStrKeys } from '../types';
-import { atomParsers, errUnsupport, LinesParser, removeComment } from '../utils';
+import { atomGenerators, fromEntries, isNonNil, ScopeGenerator } from '../utils';
+import { Replica, ReplicaBoolKeys } from '../types';
+import { atomParsers, errUnsupport, ScopeParser, removeComment } from '../utils';
 
-export const parse: LinesParser<MITM> = (lines, writeToLog) => {
-  const boolKeys = new Set([]);
+export const parse: ScopeParser<Replica> = (lines, writeToLog) => {
+  const boolKeys = new Set<ReplicaBoolKeys>([
+    'hide-apple-request',
+    'hide-crashlytics-request',
+    'hide-udp',
+    'use-keyword-filter',
+  ]);
   const numKeys = new Set([]);
   const arrKeys = new Set([]);
-  const strKeys = new Set<MITMStrKeys>(['ca-p12', 'ca-passphrase']);
+  const strKeys = new Set([]);
 
   const UNSUPPORTED_VALUE = Symbol();
 
   const getParsedValue = (key: string, value: string) => {
-    if (boolKeys.has(key as never)) {
+    if (boolKeys.has(key as ReplicaBoolKeys)) {
       return atomParsers.boolean(value);
     }
     if (numKeys.has(key as never)) {
@@ -20,7 +25,7 @@ export const parse: LinesParser<MITM> = (lines, writeToLog) => {
     if (arrKeys.has(key as never)) {
       return atomParsers.comma(value);
     }
-    if (strKeys.has(key as MITMStrKeys)) {
+    if (strKeys.has(key as never)) {
       return value;
     }
     return UNSUPPORTED_VALUE;
@@ -28,13 +33,13 @@ export const parse: LinesParser<MITM> = (lines, writeToLog) => {
 
   const keyValues = removeComment(lines).map(atomParsers.assign);
 
-  const parsed: MITM = fromEntries(
+  const parsed: Replica = fromEntries(
     keyValues
       .map(([key, value]) => {
         const parsedValue = getParsedValue(key, value);
 
         if (parsedValue === UNSUPPORTED_VALUE) {
-          writeToLog(errUnsupport('MITM', key, value));
+          writeToLog(errUnsupport('Replica', key, value));
           return null;
         }
         return [key, parsedValue];
@@ -45,7 +50,7 @@ export const parse: LinesParser<MITM> = (lines, writeToLog) => {
   return parsed;
 };
 
-export const generate: LinesGenerator<MITM> = (data, writeToLog) =>
+export const generate: ScopeGenerator<Replica> = (data, writeToLog) =>
   Object.entries(data)
     .filter(([key, value]) => isNonNil(value))
     .map((keyValue) => atomGenerators.assign(keyValue));

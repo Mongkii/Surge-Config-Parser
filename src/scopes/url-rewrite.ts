@@ -3,12 +3,12 @@ import {
   atomGenerators,
   atomParsers,
   errMsg,
-  LinesGenerator,
-  LinesParser,
+  ScopeGenerator,
+  ScopeParser,
   removeComment,
 } from '../utils';
 
-export const parse: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
+export const parse: ScopeParser<UrlRewrite[]> = (lines, writeToLog) => {
   const rawRewriteDatas = removeComment(lines).map(atomParsers.space);
 
   const parsed: UrlRewrite[] = rawRewriteDatas
@@ -28,7 +28,7 @@ export const parse: LinesParser<UrlRewrite[]> = (lines, writeToLog) => {
   return parsed;
 };
 
-export const generate: LinesGenerator<UrlRewrite[]> = (data, writeToLog) =>
+export const generate: ScopeGenerator<UrlRewrite[]> = (data, writeToLog) =>
   data
     .filter(({ from, to }) => Boolean(from && to))
     .map(({ from, to, mode }) => atomGenerators.space([from, to, mode]));

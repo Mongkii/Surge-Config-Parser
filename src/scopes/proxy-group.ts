@@ -1,7 +1,7 @@
 import { ProxyGroup } from '../types';
-import { atomGenerators, atomParsers, LinesGenerator, LinesParser, removeComment } from '../utils';
+import { atomGenerators, atomParsers, ScopeGenerator, ScopeParser, removeComment } from '../utils';
 
-export const parse: LinesParser<ProxyGroup[]> = (lines, writeToLog) => {
+export const parse: ScopeParser<ProxyGroup[]> = (lines, writeToLog) => {
   // const boolKeys = new Set([]);
   // const numKeys = new Set([]);
   // const arrKeys = new Set([]);
@@ -42,7 +42,7 @@ export const parse: LinesParser<ProxyGroup[]> = (lines, writeToLog) => {
   return parsed;
 };
 
-export const generate: LinesGenerator<ProxyGroup[]> = (data, writeToLog) =>
+export const generate: ScopeGenerator<ProxyGroup[]> = (data, writeToLog) =>
   data
     .filter((group) => Boolean(group.name /* && group.type // allow empty type for now. */))
     .map((group) => {
