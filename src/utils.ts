@@ -14,7 +14,7 @@ export const fromEntries = <T = any>(entries: [string, T][]): { [k: string]: T }
 
 export type ScopeParser<T> = (lines: string[], writeToLog: WriteToLog) => T;
 
-export type ScopeGenerator<T> = (date: T, writeToLog: WriteToLog) => string[];
+export type ScopeGenerator<T> = (data: T, writeToLog: WriteToLog) => string[];
 
 export const errMsg = (scope: keyof ConfigJSON, text: string) => `[ERROR in ${scope}] ${text}`;
 
