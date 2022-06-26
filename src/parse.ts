@@ -3,6 +3,7 @@ import type { ScopeParser } from './utils';
 
 import { parse as parseGeneral } from './scopes/general';
 import { parse as parseReplica } from './scopes/replica';
+import { parse as parseHost } from './scopes/host';
 import { parse as parseProxy } from './scopes/proxy';
 import { parse as parseProxyGroup } from './scopes/proxy-group';
 import { parse as parseRule } from './scopes/rule';
@@ -56,6 +57,7 @@ const groupLines = (config: string): LineGroup[] => {
 const parserByScope: { [scope in ScopeName]: ScopeParser<any> } = {
   General: parseGeneral,
   Replica: parseReplica,
+  Host: parseHost,
   Proxy: parseProxy,
   'Proxy Group': parseProxyGroup,
   Rule: parseRule,

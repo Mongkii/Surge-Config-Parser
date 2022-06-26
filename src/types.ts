@@ -46,6 +46,10 @@ export type ReplicaBoolKeys =
   | 'hide-udp';
 export type Replica = AllNullable<{ [K in ReplicaBoolKeys]: boolean }>;
 
+export interface Host {
+  [mapFrom: string]: string;
+}
+
 export type ProxyStrKeys =
   | 'username'
   | 'password'
@@ -93,6 +97,7 @@ export type MITM = AllNullable<{ [K in MITMStrKeys]: string }>;
 
 export type ConfigJSON = AllNullable<{
   General: General;
+  Host: Host;
   Replica: Replica;
   Proxy: Proxy[];
   'Proxy Group': ProxyGroup[];

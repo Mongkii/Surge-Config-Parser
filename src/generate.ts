@@ -4,6 +4,7 @@ import type { ScopeGenerator } from './utils';
 
 import { generate as generateGeneral } from './scopes/general';
 import { generate as generateReplica } from './scopes/replica';
+import { generate as generateHost } from './scopes/host';
 import { generate as generateProxy } from './scopes/proxy';
 import { generate as generateProxyGroup } from './scopes/proxy-group';
 import { generate as generateRule } from './scopes/rule';
@@ -13,6 +14,7 @@ import { generate as generateMITM } from './scopes/mitm';
 const generatorByScope: { [scope in ScopeName]: ScopeGenerator<any> } = {
   General: generateGeneral,
   Replica: generateReplica,
+  Host: generateHost,
   Proxy: generateProxy,
   'Proxy Group': generateProxyGroup,
   Rule: generateRule,

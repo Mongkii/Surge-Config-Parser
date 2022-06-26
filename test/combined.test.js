@@ -6,6 +6,9 @@ test('parse combined config correctly', () => {
 loglevel = notify
 dns-server = system
 
+[Host]
+*.abc.com = server:syslib
+
 [Proxy]
 Test Proxy = ss, 127.0.0.1, 8080, encrypt-method=rc4-md5, password=abc123, udp-relay=true
 
@@ -24,6 +27,9 @@ ca-p12 = MIIKPAIBAz/=
     General: {
       loglevel: 'notify',
       'dns-server': ['system'],
+    },
+    Host: {
+      '*.abc.com': 'server:syslib',
     },
     Proxy: [
       {
@@ -85,6 +91,10 @@ test('generate combined config correctly', () => {
       loglevel: 'notify',
       'dns-server': ['system'],
     },
+    Host: {
+      '*.abc.com': 'server:syslib',
+      'abc.com': '1.1.1.1',
+    },
     Proxy: [
       {
         name: 'Test Proxy',
@@ -114,6 +124,10 @@ test('generate combined config correctly', () => {
 [General]
 loglevel = notify
 dns-server = system
+
+[Host]
+*.abc.com = server:syslib
+abc.com = 1.1.1.1
 
 [Proxy]
 Test Proxy = ss, 127.0.0.1, 8080, encrypt-method = rc4-md5, password = abc123, udp-relay = true
